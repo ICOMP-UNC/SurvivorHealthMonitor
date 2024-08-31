@@ -54,3 +54,4 @@ dkms.conf
 # Exclude custom folders
 external/
 build/
+*.sh
