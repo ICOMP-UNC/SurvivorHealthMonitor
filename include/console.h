@@ -60,7 +60,7 @@ void consoleStatesHandler(console_t);
  * 
  */
 char* consolePrintDataInput(); 
-
+char* consoleMainMenuInput();
 /**
  * @brief All console callbacks functions. 
  * 
