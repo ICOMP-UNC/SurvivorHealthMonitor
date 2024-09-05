@@ -1,1 +1,0 @@
-//Esta podria ser la funcion que se encargue de la pantalla de inicio de la consola.
