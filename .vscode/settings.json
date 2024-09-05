@@ -1,0 +1,11 @@
+{
+  "files.associations": {
+    "*.rmd": "markdown",
+    "stdbool.h": "c",
+    "r_u_okmessage.h": "c",
+    "consolestates.h": "c",
+    "errormessage.h": "c",
+    "send.h": "c",
+    "console.h": "c"
+  }
+}

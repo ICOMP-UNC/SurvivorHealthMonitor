@@ -8,19 +8,23 @@
  */
 
 #include <stdio.h>
+#include "../include/timeController.h"
 #include <time.h>
-
+#include "console.c"
 int main(int argc, char *argv[]) {
-  system();
-  printf("Hello World!\n");
+  consoleIO(consoleInit);
   
-  // console(update()); Cada vez que pase por aca, la consola se actualizara con los
-  // datos del sistema.
-  __clock_t start = clock();
-  __clock_t dt = clock() - start;
-  while(clock() - start  < CLOCKS_PER_SEC * 0.1 ){
-    printf("Welcome.\n");
-    
-  }
+  
+  
+  
   return 0;
 }
+
+void delay(double seconds) {
+  __clock_t initial_timestamp = clock();
+  __clock_t delta_time = clock() - initial_timestamp;
+  while(clock() - initial_timestamp  < CLOCKS_PER_SEC * seconds ){
+    //do nothing
+  }
+}
+
