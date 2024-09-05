@@ -1,3 +1,20 @@
+/**
+ * @details This file contains the main console functions.
+ * Manual:
+ * - consoleIO: Every time is called, does the same process.
+ * - consoleStatesHandler: Manage next state considering the last state that is passed.
+ * - Each console_t struct has various attributes that are used to manage the console.
+ * Most important attributes are explained on include/console.h
+ * - To manage input data screens, console_t has three attributes:
+ *  1.- state_with_input_data: If the state requires input data. ConsoleIO will know how to handle it if this attribute is correctly set.
+ *  2.- input_data_function: This has to be declared on this file. Contains the logic to get the input data, and returns char*.
+ *  3.- input_data: This is the input data that the user has entered. It is assigned on consoleIO after calling input_data_function.
+ * - If the screen not requires input data, the attribute state_with_input_data MUST be set to false.
+ * IMPORTANT: All console states must be declared on include/console.h and structs must be initialized on this file, on each console-feature function.
+ * 
+ * @author Emiliano Castro.
+ */
+
 #pragma once
 #include "../include/console.h"
 #include <stdlib.h>
