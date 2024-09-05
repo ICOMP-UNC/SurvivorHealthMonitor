@@ -7,6 +7,7 @@
 #pragma once
 #include <stdbool.h>
 #define _STATUS_OK 0
+#define _STATUS_ERR 1
 /**
  * @brief possible console states
  /**

@@ -43,6 +43,7 @@ int consoleIO(console_t(*callback)()) {
   
   if(console.console_status != _STATUS_OK){
     printf("%s\n", "Error: ");
+    exit(1);
   }
 
   
@@ -61,7 +62,7 @@ int consoleIO(console_t(*callback)()) {
  * @brief Manage where the application should go next
  * Preferably, this function should not have any big logic, and should only call other functions.
  * There are various tools to manage the consoleIO current state to help with that.
- * 
+ * Should have the input data logic if the state requires it.
  * @param console current console from consoleIO
  */
 void consoleStatesHandler(console_t console) {
@@ -109,7 +110,11 @@ console_t consoleExit() {
 }
 
 console_t consoleError() {
-
+  console_t console_error;
+  console_error.state = CONSOLE_ERROR;
+  console_error.console_status = _STATUS_ERR;
+  console_error.console_message = "Error";
+  return console_error;
 }
 
 console_t consolePrintData() {
