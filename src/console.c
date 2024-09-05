@@ -33,6 +33,7 @@
  * @return int 
  */
 int consoleIO(console_t(*callback)()) {
+  system("clear");
   console_t console;
   console.default_header = CONSOLE_HEADER_MESSAGE;
   console.default_footer = CONSOLE_FOOTER_MESSAGE;
@@ -54,7 +55,8 @@ int consoleIO(console_t(*callback)()) {
   printf("%s\n", console.default_footer);
   if(console.state_with_input_data) {
     console.input_data = console.input_data_function();
-    printf("%s\n", console.input_data);
+    //printf("%s\n", console.input_data);
+   
   }
   consoleStatesHandler(console);
 
@@ -86,17 +88,28 @@ void consoleStatesHandler(console_t console) {
       consoleIO(consoleError);
       break;
     case CONSOLE_PRINT_DATA:
-      delay(2);
-      consoleIO(consoleExit);
+      //delay(2);
+      consoleIO(consoleMainMenu);
       break;
     case CONSOLE_MAIN_MENU:
-     
-      consoleIO(consoleMainMenu); //Always return to the main menu (change ths)
+    //Ugly implementation. Think about a better way to do this
+      
+      if(console.input_data == "1") {
+        consoleIO(consolePrintData);
+      } else if(console.input_data == "2") {
+        consoleIO(consoleInit);
+      } else if(console.input_data == "3") {
+        consoleIO(consoleExit);
+      } else {
+        consoleIO(consoleError);
+      }      
+
       break;
     default:
       break;
   }
 }
+
 console_t consoleInit() {
 
   console_t console_init;
@@ -109,6 +122,7 @@ console_t consoleInit() {
 
 console_t consoleExit() {
   console_t console_exit;
+  console_exit.state_with_input_data = false;
   console_exit.state = CONSOLE_EXIT;
   console_exit.console_status = _STATUS_OK;
   console_exit.console_message = CONSOLE_EXIT_MESSAGE;      //And this
@@ -154,35 +168,22 @@ char* consoleMainMenuInput() {
   int input;
   scanf("%d", &input);
   if(input == 1) {
-    printf("%s\n", "Usted eligio la opcion 1");
     return "1";
   } else if(input == 2) {
    
-    printf("%s\n", "Usted eligio la opcion 2");
      return "2";
   } else if(input == 3) {
-    printf("%s\n", "Usted eligio la opcion 3");
     return "3";
   } else {
     consoleIO(consoleError);
   }
 }
 char* consolePrintDataInput() {
-  int input;
-  scanf("%d", &input);
-  if(input == 1) {
-    printf("%s\n", "Imprimiendo 1");
-    return "1";
-  } else if(input == 2) {
-   
-    printf("%s\n", "Imprimiendo 2");
-     return "2";
-  } else if(input == 3) {
-    printf("%s\n", "Imprimiendo 3");
-    return "3";
-  } else {
-    consoleIO(consoleError);
-  }
+  getchar();
+  printf("%s\n", "DATA TO SHOW");
+  printf("%s\n", "Press enter to continue..");
+  getchar();
+    return " ";
 }
 
 
