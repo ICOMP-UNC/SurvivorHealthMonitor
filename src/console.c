@@ -1,7 +1,7 @@
 /**
  * @details This file contains the main console functions.
  * Manual:
- * - consoleIO: Every time is called, does the same process.
+ * - consoleIO: Every time is called, does the same process. May be operated recursively.
  * - consoleStatesHandler: Manage next state considering the last state that is passed.
  * - Each console_t struct has various attributes that are used to manage the console.
  * Most important attributes are explained on include/console.h
