@@ -96,7 +96,7 @@ console_t consoleInit() {
   console_t console_init;
   console_init.state = CONSOLE_INIT;
   console_init.console_status = _STATUS_OK;
-  console_init.console_message = "Bienvenidos";
+  console_init.console_message = "Bienvenidos"; //Giuli you implement this
   console_init.state_with_input_data = false;
   return console_init;
 }
@@ -105,7 +105,7 @@ console_t consoleExit() {
   console_t console_exit;
   console_exit.state = CONSOLE_EXIT;
   console_exit.console_status = _STATUS_OK;
-  console_exit.console_message = "Chau";
+  console_exit.console_message = "Chau";      //And this
   return console_exit;
 }
 
@@ -113,7 +113,7 @@ console_t consoleError() {
   console_t console_error;
   console_error.state = CONSOLE_ERROR;
   console_error.console_status = _STATUS_ERR;
-  console_error.console_message = "Error";
+  console_error.console_message = "Error";      
   return console_error;
 }
 
@@ -155,3 +155,10 @@ char* consolePrintDataInput() {
 }
 
 
+//Giuli you can make functions following the pattern of the manual above.
+//You can also create new states on include/console.h and implement them here.
+//If you need (recommended) to create new functions to modularize the code, you can do it on this file or new ones.
+//For example, if you want to include ASCII art, maybe you can create 
+//a "ASCIIArtGenerator.c", or something like that, and call it from here.
+//Even if you want you can include new attributes on the console_t struct, like a "char* ascii_art" attribute.
+//Remember to initialize the new attributes on the console-feature functions. Errors will be thrown if you dont do it.
