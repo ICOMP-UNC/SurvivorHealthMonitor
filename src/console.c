@@ -41,6 +41,7 @@ int consoleIO(console_t(*callback)()) {
   console.input_data_function = new_console.input_data_function;
   console.state_with_input_data = new_console.state_with_input_data;
   console.state = new_console.state;
+  console.state_with_PETC = new_console.state_with_PETC;
   console.console_status = new_console.console_status;
   console.console_message = new_console.console_message;
   
@@ -52,17 +53,25 @@ int consoleIO(console_t(*callback)()) {
   
   printf("%s\n", console.default_header);
   printf("%s\n", console.console_message);
+  if(console.state_with_PETC) {
+    printf("%s\n", CONSOLE_PETC);
+  }
   printf("%s\n", console.default_footer);
   if(console.state_with_input_data) {
     console.input_data = console.input_data_function();
     //printf("%s\n", console.input_data);
    
   }
+
+  if(console.state_with_PETC) {
+    getchar();
+    getchar();
+  }
   consoleStatesHandler(console);
 
-
+  //Bad implementation of recursion. Think about a better way to do this. When exit is called, 
+  //the system need to finish all states to end the recursion.
   //---Code goes here when the system has finished and recursion is over---
-  delay(1);
   return 0;
 }
 
@@ -113,6 +122,8 @@ void consoleStatesHandler(console_t console) {
 console_t consoleInit() {
 
   console_t console_init;
+  console_init.state_with_input_data = false;
+  console_init.state_with_PETC = false;
   console_init.state = CONSOLE_INIT;
   console_init.console_status = _STATUS_OK;
   console_init.console_message = CONSOLE_INIT_MESSAGE; //Giuli you implement this
@@ -123,6 +134,7 @@ console_t consoleInit() {
 console_t consoleExit() {
   console_t console_exit;
   console_exit.state_with_input_data = false;
+  console_exit.state_with_PETC = false;
   console_exit.state = CONSOLE_EXIT;
   console_exit.console_status = _STATUS_OK;
   console_exit.console_message = CONSOLE_EXIT_MESSAGE;      //And this
@@ -131,6 +143,8 @@ console_t consoleExit() {
 
 console_t consoleError() {
   console_t console_error;
+  console_error.state_with_input_data = false;
+  console_error.state_with_PETC = false;
   console_error.state = CONSOLE_ERROR;
   console_error.console_status = _STATUS_ERR;
   console_error.console_message = CONSOLE_ERROR_MESSAGE;  //And this   
@@ -140,16 +154,17 @@ console_t consoleError() {
 console_t consolePrintData() {
   console_t console_print_data;
   console_print_data.state = CONSOLE_PRINT_DATA;
+  console_print_data.state_with_input_data = false;
+  console_print_data.state_with_PETC = true;
   console_print_data.console_status = _STATUS_OK;
-  console_print_data.console_message = "Elige un valor para imprimir: 1, 2 o 3";  //example here
-  console_print_data.state_with_input_data = true;
-  console_print_data.input_data_function = consolePrintDataInput;
+  console_print_data.console_message = CONSOLE_PRINT_DATA_MESSAGE; 
   return console_print_data;
 }
 
 console_t consoleMainMenu() {
   console_t console_main_menu;
   console_main_menu.state = CONSOLE_MAIN_MENU;
+  console_main_menu.state_with_PETC = false;
   console_main_menu.console_status = _STATUS_OK;
   console_main_menu.console_message = CONSOLE_MAIN_MENU_MESSAGE; 
   console_main_menu.state_with_input_data = true;
@@ -178,13 +193,7 @@ char* consoleMainMenuInput() {
     consoleIO(consoleError);
   }
 }
-char* consolePrintDataInput() {
-  getchar();
-  printf("%s\n", "DATA TO SHOW");
-  printf("%s\n", "Press enter to continue..");
-  getchar();
-    return " ";
-}
+
 
 
 //Giuli you can make functions following the pattern of the manual above.

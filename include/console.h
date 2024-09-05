@@ -32,6 +32,7 @@ typedef enum {
 
 typedef struct {
     bool state_with_input_data;       // If the state requires input data
+    bool state_with_PETC;             // If the state requires to press enter to continue
     char* input_data;                 // Input data
     console_state_t state;            // Current state
     char *default_header;             // Default header
@@ -55,11 +56,11 @@ int consoleIO(console_t(*)());
  */
 void consoleStatesHandler(console_t);
 
+
 /**
  * @brief For each console state that needs input data, a function like this should be created.
  * 
  */
-char* consolePrintDataInput(); 
 char* consoleMainMenuInput();
 /**
  * @brief All console callbacks functions. 
