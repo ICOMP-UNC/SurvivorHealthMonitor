@@ -17,7 +17,9 @@
 
 #pragma once
 #include "../include/console.h"
+#include "../include/consoleScreen.h"
 #include <stdlib.h>
+
 
 /**
  * @brief Main console function
@@ -32,8 +34,8 @@
  */
 int consoleIO(console_t(*callback)()) {
   console_t console;
-  console.default_header = "";
-  console.default_footer = "";
+  console.default_header = CONSOLE_HEADER_MESSAGE;
+  console.default_footer = CONSOLE_FOOTER_MESSAGE;
   console_t new_console = callback();
   console.input_data_function = new_console.input_data_function;
   console.state_with_input_data = new_console.state_with_input_data;
@@ -55,6 +57,10 @@ int consoleIO(console_t(*callback)()) {
     printf("%s\n", console.input_data);
   }
   consoleStatesHandler(console);
+
+
+  //---Code goes here when the system has finished and recursion is over---
+  delay(1);
   return 0;
 }
 
@@ -71,11 +77,10 @@ void consoleStatesHandler(console_t console) {
     case CONSOLE_INIT:
       delay(2);
       system("clear");
-      consoleIO(consolePrintData);
+      consoleIO(consoleMainMenu);
       break;
     case CONSOLE_EXIT:
-    system("clear");
-      exit(0);
+      system("clear");
       break;
     case CONSOLE_ERROR:
       consoleIO(consoleError);
@@ -85,7 +90,8 @@ void consoleStatesHandler(console_t console) {
       consoleIO(consoleExit);
       break;
     case CONSOLE_MAIN_MENU:
-      consoleIO(consoleMainMenu);
+     
+      consoleIO(consoleMainMenu); //Always return to the main menu (change ths)
       break;
     default:
       break;
@@ -96,7 +102,7 @@ console_t consoleInit() {
   console_t console_init;
   console_init.state = CONSOLE_INIT;
   console_init.console_status = _STATUS_OK;
-  console_init.console_message = "Bienvenidos"; //Giuli you implement this
+  console_init.console_message = CONSOLE_INIT_MESSAGE; //Giuli you implement this
   console_init.state_with_input_data = false;
   return console_init;
 }
@@ -105,7 +111,7 @@ console_t consoleExit() {
   console_t console_exit;
   console_exit.state = CONSOLE_EXIT;
   console_exit.console_status = _STATUS_OK;
-  console_exit.console_message = "Chau";      //And this
+  console_exit.console_message = CONSOLE_EXIT_MESSAGE;      //And this
   return console_exit;
 }
 
@@ -113,7 +119,7 @@ console_t consoleError() {
   console_t console_error;
   console_error.state = CONSOLE_ERROR;
   console_error.console_status = _STATUS_ERR;
-  console_error.console_message = "Error";      
+  console_error.console_message = CONSOLE_ERROR_MESSAGE;  //And this   
   return console_error;
 }
 
@@ -128,7 +134,13 @@ console_t consolePrintData() {
 }
 
 console_t consoleMainMenu() {
-
+  console_t console_main_menu;
+  console_main_menu.state = CONSOLE_MAIN_MENU;
+  console_main_menu.console_status = _STATUS_OK;
+  console_main_menu.console_message = CONSOLE_MAIN_MENU_MESSAGE; 
+  console_main_menu.state_with_input_data = true;
+  console_main_menu.input_data_function = consoleMainMenuInput;
+  return console_main_menu;
 }
 
 /**
@@ -136,6 +148,25 @@ console_t consoleMainMenu() {
  * this is an example. Not real implementation.
  * 
  */
+
+char* consoleMainMenuInput() {
+
+  int input;
+  scanf("%d", &input);
+  if(input == 1) {
+    printf("%s\n", "Usted eligio la opcion 1");
+    return "1";
+  } else if(input == 2) {
+   
+    printf("%s\n", "Usted eligio la opcion 2");
+     return "2";
+  } else if(input == 3) {
+    printf("%s\n", "Usted eligio la opcion 3");
+    return "3";
+  } else {
+    consoleIO(consoleError);
+  }
+}
 char* consolePrintDataInput() {
   int input;
   scanf("%d", &input);
