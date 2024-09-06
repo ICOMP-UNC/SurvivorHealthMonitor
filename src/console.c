@@ -50,28 +50,29 @@ int consoleIO(console_t(*callback)()) {
   console->console_status = new_console.console_status;
   console->console_message = new_console.console_message;
     
-  if(console->console_status != _STATUS_OK){
+    if(console->console_status != _STATUS_OK){            //Error handling. Need more implementation.
     printf("%s\n", "Error: ");
     exit(1);
-  }
-
+    }
   
   printf("%s\n", console->default_header);
   printf("%s\n", console->console_message);
-  if(console->state_with_PETC) {
-    printf("%s\n", CONSOLE_PETC);
-  }
-  printf("%s\n", console->default_footer);
-  if(console->state_with_input_data) {
-    console->input_data = console->input_data_function();
-    //printf("%s\n", console.input_data);
-   
-  }
 
-  if(console->state_with_PETC) {
-    getchar();
-    getchar();
-  }
+    if(console->state_with_PETC) {
+      printf("%s\n", CONSOLE_PETC);
+    }
+
+  printf("%s\n", console->default_footer);
+
+    if(console->state_with_input_data) {
+      console->input_data = console->input_data_function();
+    }
+
+          if(console->state_with_PETC) {          // Press Enter to Continue input 
+            getchar();                            
+            getchar();
+          }
+          
   consoleStatesHandler(console);
   
   //Bad implementation of recursion. Think about a better way to do this. When exit is called, 
@@ -87,6 +88,8 @@ int consoleIO(console_t(*callback)()) {
  * Should have the input data logic if the state requires it.
  * @param console current console from consoleIO
  */
+
+
 void consoleStatesHandler(console_t* console) {
   
   switch(console->state){
