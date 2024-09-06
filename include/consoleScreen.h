@@ -2,9 +2,9 @@
 #include <stdlib.h>
 
 char* CONSOLE_PETC = "\n\n\nPress Enter to continue..";
-char* CONSOLE_HEADER_MESSAGE = "#######APP########";
-char* CONSOLE_FOOTER_MESSAGE = "##################";
-char* CONSOLE_MAIN_MENU_MESSAGE = "MENU PRINCIPAL"
+char* CONSOLE_HEADER_MESSAGE = "###############################APP###############################";
+char* CONSOLE_FOOTER_MESSAGE = "#################################################################";
+char* CONSOLE_MAIN_MENU_MESSAGE = "                           MENU PRINCIPAL"
                           "\n 1. Data"
                           "\n 2. Reset App"
                           "\n 3. Exit";

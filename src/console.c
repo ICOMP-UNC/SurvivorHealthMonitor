@@ -40,7 +40,7 @@ int consoleIO(console_t(*callback)()) {
   console_t* console = getConsole();
   system("clear");
   console->default_header = CONSOLE_HEADER_MESSAGE;
-  console->default_footer = CONSOLE_HEADER_MESSAGE;
+  console->default_footer = CONSOLE_FOOTER_MESSAGE;
   console_t new_console = callback();
   console->input_data_function = new_console.input_data_function;
   console->state_with_input_data = new_console.state_with_input_data;
