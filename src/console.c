@@ -37,7 +37,6 @@
 static console_t* global_console;
 
 int consoleIO(console_t(*callback)()) {
-  int c=0;
   console_t* console = getConsole();
   system("clear");
   console->default_header = CONSOLE_HEADER_MESSAGE;
@@ -52,7 +51,7 @@ int consoleIO(console_t(*callback)()) {
     
     if(console->console_status != _STATUS_OK){            //Error handling. Need more implementation.
     printf("%s\n", "Error: ");
-    exit(1);
+    exit(_STATUS_ERR);
     }
   
   printf("%s\n", console->default_header);
@@ -72,13 +71,13 @@ int consoleIO(console_t(*callback)()) {
             getchar();                            
             getchar();
           }
-          
+
   consoleStatesHandler(console);
   
   //Bad implementation of recursion. Think about a better way to do this. When exit is called, 
   //the system need to finish all states to end the recursion.
   //---Code goes here when the system has finished and recursion is over---
-  return 0;
+  return _STATUS_OK;
 }
 
 /**
@@ -231,6 +230,8 @@ void consoleInit() {
  * This is called from consolePrintData to show latest data
  * 
  */
+
+
 void updateData(){
   CONSOLE_PRINT_DATA_MESSAGE = getData();  
 }
