@@ -8,6 +8,7 @@
 #include <stdbool.h>
 #define _STATUS_OK 0
 #define _STATUS_ERR 1
+
 /**
  * @brief possible console states
  /**
@@ -19,7 +20,8 @@ typedef enum {
     CONSOLE_EXIT,
     CONSOLE_ERROR,
     CONSOLE_PRINT_DATA,
-    CONSOLE_MAIN_MENU
+    CONSOLE_MAIN_MENU,
+    CONSOLE_WELCOME
 } console_state_t;
 
 
@@ -48,13 +50,16 @@ typedef struct {
  * @return int 
  */
  
+
+static console_t* global_console;   //Global console variable
+
 int consoleIO(console_t(*)());
 
 /**
  * @brief Handle states
  * 
  */
-void consoleStatesHandler(console_t);
+void consoleStatesHandler(console_t*);
 
 
 /**
@@ -67,9 +72,18 @@ char* consoleMainMenuInput();
  * 
  * @return console_t 
  */
-console_t consoleInit();
+
 console_t consoleExit();
 console_t consoleError();
 console_t consolePrintData();
+console_t consoleWelcome();
 console_t consoleMainMenu();
 
+
+/**
+ * @brief Get the Console location on memory
+ * 
+ * @return console_t* The console that has been generated on init
+ */
+console_t* getConsole();
+void consoleInit();   //initialize console

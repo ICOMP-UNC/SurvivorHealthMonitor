@@ -12,7 +12,7 @@
 #include <time.h>
 #include "console.c"
 int main(int argc, char *argv[]) {
-  consoleIO(consoleInit);
+  consoleIO(consoleWelcome);
   
   
   

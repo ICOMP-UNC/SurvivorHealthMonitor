@@ -32,38 +32,41 @@
  * @param callback 
  * @return int 
  */
+
+static console_t* global_console;
+
 int consoleIO(console_t(*callback)()) {
+  console_t* console = getConsole();
   system("clear");
-  console_t console;
-  console.default_header = CONSOLE_HEADER_MESSAGE;
-  console.default_footer = CONSOLE_FOOTER_MESSAGE;
+  console->default_header = CONSOLE_HEADER_MESSAGE;
+  console->default_footer = CONSOLE_HEADER_MESSAGE;
   console_t new_console = callback();
-  console.input_data_function = new_console.input_data_function;
-  console.state_with_input_data = new_console.state_with_input_data;
-  console.state = new_console.state;
-  console.state_with_PETC = new_console.state_with_PETC;
-  console.console_status = new_console.console_status;
-  console.console_message = new_console.console_message;
-  
-  if(console.console_status != _STATUS_OK){
+  console->input_data_function = new_console.input_data_function;
+  console->state_with_input_data = new_console.state_with_input_data;
+  console->state = new_console.state;
+  console->state_with_PETC = new_console.state_with_PETC;
+  console->console_status = new_console.console_status;
+  console->console_message = new_console.console_message;
+    
+  if(console->console_status != _STATUS_OK){
     printf("%s\n", "Error: ");
     exit(1);
   }
 
   
-  printf("%s\n", console.default_header);
-  printf("%s\n", console.console_message);
-  if(console.state_with_PETC) {
+  printf("%s\n", console->default_header);
+  printf("%s\n", console->console_message);
+  if(console->state_with_PETC) {
     printf("%s\n", CONSOLE_PETC);
   }
-  printf("%s\n", console.default_footer);
-  if(console.state_with_input_data) {
-    console.input_data = console.input_data_function();
+  printf("%s\n", console->default_footer);
+  if(console->state_with_input_data) {
+    console->input_data = console->input_data_function();
     //printf("%s\n", console.input_data);
    
   }
 
-  if(console.state_with_PETC) {
+  if(console->state_with_PETC) {
     getchar();
     getchar();
   }
@@ -82,10 +85,10 @@ int consoleIO(console_t(*callback)()) {
  * Should have the input data logic if the state requires it.
  * @param console current console from consoleIO
  */
-void consoleStatesHandler(console_t console) {
+void consoleStatesHandler(console_t* console) {
 
-  switch(console.state){
-    case CONSOLE_INIT:
+  switch(console->state){
+    case CONSOLE_WELCOME:
       delay(2);
       system("clear");
       consoleIO(consoleMainMenu);
@@ -103,11 +106,11 @@ void consoleStatesHandler(console_t console) {
     case CONSOLE_MAIN_MENU:
     //Ugly implementation. Think about a better way to do this
       
-      if(console.input_data == "1") {
+      if(console->input_data == "1") {
         consoleIO(consolePrintData);
-      } else if(console.input_data == "2") {
-        consoleIO(consoleInit);
-      } else if(console.input_data == "3") {
+      } else if(console->input_data == "2") {
+        consoleIO(consoleWelcome);
+      } else if(console->input_data == "3") {
         consoleIO(consoleExit);
       } else {
         consoleIO(consoleError);
@@ -119,16 +122,16 @@ void consoleStatesHandler(console_t console) {
   }
 }
 
-console_t consoleInit() {
 
-  console_t console_init;
-  console_init.state_with_input_data = false;
-  console_init.state_with_PETC = false;
-  console_init.state = CONSOLE_INIT;
-  console_init.console_status = _STATUS_OK;
-  console_init.console_message = CONSOLE_INIT_MESSAGE; //Giuli you implement this
-  console_init.state_with_input_data = false;
-  return console_init;
+console_t consoleWelcome() {
+  console_t console_welcome;
+  console_welcome.state_with_input_data = false;
+  console_welcome.state_with_PETC = false;
+  console_welcome.state = CONSOLE_WELCOME;
+  console_welcome.console_status = _STATUS_OK;
+  console_welcome.console_message = CONSOLE_WELCOME_MESSAGE; //Giuli you implement this
+  console_welcome.state_with_input_data = false;
+  return console_welcome;
 }
 
 console_t consoleExit() {
@@ -194,7 +197,15 @@ char* consoleMainMenuInput() {
   }
 }
 
-
+console_t* getConsole() {
+  if(global_console == NULL) {
+    consoleInit();
+  }
+  return global_console;
+}
+void consoleInit() {
+  global_console = (console_t*)malloc(sizeof(console_t));  
+}
 
 //Giuli you can make functions following the pattern of the manual above.
 //You can also create new states on include/console.h and implement them here.
