@@ -2,8 +2,9 @@
  * @details This file contains the main console functions.
  * Manual:
  * - consoleIO: Every time is called, does the same process. May be operated recursively.
- * - consoleStatesHandler: Manage next state considering the last state that is passed.
- * - Each console_t struct has various attributes that are used to manage the console.
+ * - consoleStatesHandler: Manage next state considering the last state that is passed. Here is also the logic to be implemented if states have input data.
+ * - Each console_t struct has various attributes that are used to manage the console. All attributes must be initialized on the console-feature functions.
+ * - Console-feature functions are functions that generate an specific console. They must return a console_t struct.
  * Most important attributes are explained on include/console.h
  * - To manage input data screens, console_t has three attributes:
  *  1.- state_with_input_data: If the state requires input data. ConsoleIO will know how to handle it if this attribute is correctly set.
@@ -36,6 +37,7 @@
 static console_t* global_console;
 
 int consoleIO(console_t(*callback)()) {
+  int c=0;
   console_t* console = getConsole();
   system("clear");
   console->default_header = CONSOLE_HEADER_MESSAGE;
@@ -71,7 +73,7 @@ int consoleIO(console_t(*callback)()) {
     getchar();
   }
   consoleStatesHandler(console);
-
+  
   //Bad implementation of recursion. Think about a better way to do this. When exit is called, 
   //the system need to finish all states to end the recursion.
   //---Code goes here when the system has finished and recursion is over---
@@ -86,7 +88,7 @@ int consoleIO(console_t(*callback)()) {
  * @param console current console from consoleIO
  */
 void consoleStatesHandler(console_t* console) {
-
+  
   switch(console->state){
     case CONSOLE_WELCOME:
       delay(2);
@@ -100,7 +102,6 @@ void consoleStatesHandler(console_t* console) {
       consoleIO(consoleError);
       break;
     case CONSOLE_PRINT_DATA:
-      //delay(2);
       consoleIO(consoleMainMenu);
       break;
     case CONSOLE_MAIN_MENU:
@@ -122,6 +123,8 @@ void consoleStatesHandler(console_t* console) {
   }
 }
 
+//-----------------------------Console feature functions-----------------------------------
+//All console feature functions must be completed with all the attributes of the console_t struct.
 
 console_t consoleWelcome() {
   console_t console_welcome;
@@ -155,6 +158,7 @@ console_t consoleError() {
 }
 
 console_t consolePrintData() {
+  updateData();
   console_t console_print_data;
   console_print_data.state = CONSOLE_PRINT_DATA;
   console_print_data.state_with_input_data = false;
@@ -175,12 +179,14 @@ console_t consoleMainMenu() {
   return console_main_menu;
 }
 
+//--------------------------------------------------------------------------------
 /**
  * @brief Functions that require input data should be created like this.
  * this is an example. Not real implementation.
  * 
  */
 
+//-----------------------------Input data functions-----------------------------------
 char* consoleMainMenuInput() {
 
   int input;
@@ -197,15 +203,35 @@ char* consoleMainMenuInput() {
   }
 }
 
+//--------------------------------------------------------------------------------
+/**
+ * @brief Get the Console location on memory
+ * 
+ * @return console_t* The console that has been generated on init
+ */
 console_t* getConsole() {
   if(global_console == NULL) {
     consoleInit();
   }
   return global_console;
 }
+/**
+ * @brief Initialize console, allocating memory and assigning it to global_console
+ * 
+ */
 void consoleInit() {
   global_console = (console_t*)malloc(sizeof(console_t));  
 }
+
+/**
+ * @brief Get data from board. Calls getData from main
+ * This is called from consolePrintData to show latest data
+ * 
+ */
+void updateData(){
+  CONSOLE_PRINT_DATA_MESSAGE = getData();  
+}
+
 
 //Giuli you can make functions following the pattern of the manual above.
 //You can also create new states on include/console.h and implement them here.

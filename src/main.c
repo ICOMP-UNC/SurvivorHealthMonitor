@@ -12,11 +12,9 @@
 #include <time.h>
 #include "console.c"
 int main(int argc, char *argv[]) {
+ 
   consoleIO(consoleWelcome);
-  
-  
-  
-  
+
   return 0;
 }
 
@@ -28,3 +26,7 @@ void delay(double seconds) {
   }
 }
 
+
+char* getData() {
+  return "Hola esto es la data";
+}       //This is gonna be implemented from other teams.

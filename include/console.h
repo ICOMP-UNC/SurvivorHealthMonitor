@@ -87,3 +87,6 @@ console_t consoleMainMenu();
  */
 console_t* getConsole();
 void consoleInit();   //initialize console
+
+void updateData(); //Get data from board. Calls getData from main
+char* getData();  //This is gonna be implemented from other teams. This must be declared on other files.
