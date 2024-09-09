@@ -6,6 +6,7 @@
     "consolestates.h": "c",
     "errormessage.h": "c",
     "send.h": "c",
-    "console.h": "c"
+    "console.h": "c",
+    "stdlib.h": "c"
   }
 }

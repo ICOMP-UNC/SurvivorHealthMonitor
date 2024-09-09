@@ -35,12 +35,14 @@ typedef enum {
 typedef struct {
     bool state_with_input_data;       // If the state requires input data
     bool state_with_PETC;             // If the state requires to press enter to continue
+    bool state_with_animation;        // If the state prints an animation
     char* input_data;                 // Input data
     console_state_t state;            // Current state
     char *default_header;             // Default header
     char *default_footer;             // Default footer
     int (*callback_function)();       // Callback function
     char* (*input_data_function)();             // Input data function: Needs to be created for each state that requires input data. If state_with_input_data is true, this functions will be called on consoleIO.               
+    char* (*animation_function)();    // Animation function: Needs to be created for each state that requires animation. If state_with_animation is true, this function will be called on consoleIO.
     int console_status;               // Status of the console
     char *console_message;            // Message to be printed on the console: If screen needs options to be selected on input_data, this message should include the options.
 } console_t;

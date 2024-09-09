@@ -19,6 +19,7 @@
 #pragma once
 #include "../include/console.h"
 #include "../include/consoleScreen.h"
+#include "../include/consoleAnimation.h"
 #include <stdlib.h>
 
 
@@ -54,6 +55,11 @@ int consoleIO(console_t(*callback)()) {
     exit(_STATUS_ERR);
     }
   
+if (console->state_with_animation) {
+    console->animation_function = new_console.animation_function;
+    console->animation_function();
+  }
+
   printf("%s\n", console->default_header);
   printf("%s\n", console->console_message);
 
@@ -132,7 +138,9 @@ console_t consoleWelcome() {
   console_t console_welcome;
   console_welcome.state_with_input_data = false;
   console_welcome.state_with_PETC = false;
+  console_welcome.state_with_animation = true;
   console_welcome.state = CONSOLE_WELCOME;
+  console_welcome.animation_function = readFile(console_welcome.state);
   console_welcome.console_status = _STATUS_OK;
   console_welcome.console_message = CONSOLE_WELCOME_MESSAGE; //Giuli you implement this
   console_welcome.state_with_input_data = false;
@@ -143,7 +151,9 @@ console_t consoleExit() {
   console_t console_exit;
   console_exit.state_with_input_data = false;
   console_exit.state_with_PETC = false;
+  console_exit.state_with_animation = true;
   console_exit.state = CONSOLE_EXIT;
+  console_exit.animation_function = readFile(console_exit.state);
   console_exit.console_status = _STATUS_OK;
   console_exit.console_message = CONSOLE_EXIT_MESSAGE;      //And this
   return console_exit;
@@ -153,6 +163,7 @@ console_t consoleError() {
   console_t console_error;
   console_error.state_with_input_data = false;
   console_error.state_with_PETC = false;
+  console_error.state_with_animation = false;
   console_error.state = CONSOLE_ERROR;
   console_error.console_status = _STATUS_ERR;
   console_error.console_message = CONSOLE_ERROR_MESSAGE;  //And this   
@@ -165,6 +176,7 @@ console_t consolePrintData() {
   console_print_data.state = CONSOLE_PRINT_DATA;
   console_print_data.state_with_input_data = false;
   console_print_data.state_with_PETC = true;
+  console_print_data.state_with_animation = false;
   console_print_data.console_status = _STATUS_OK;
   console_print_data.console_message = CONSOLE_PRINT_DATA_MESSAGE; 
   return console_print_data;
@@ -174,6 +186,7 @@ console_t consoleMainMenu() {
   console_t console_main_menu;
   console_main_menu.state = CONSOLE_MAIN_MENU;
   console_main_menu.state_with_PETC = false;
+  console_main_menu.state_with_animation = false;
   console_main_menu.console_status = _STATUS_OK;
   console_main_menu.console_message = CONSOLE_MAIN_MENU_MESSAGE; 
   console_main_menu.state_with_input_data = true;
@@ -203,6 +216,58 @@ char* consoleMainMenuInput() {
   } else {
     consoleIO(consoleError);
   }
+}
+
+//-----------------------------Animation functions-------------------------------------
+/**
+ * @brief Reads the .txt file based on the state of the console
+ * 
+ * @param state
+ * 
+ * @return char*
+ */
+char* readFile(console_state_t state){
+    FILE *file;
+    int in_frame = 0; // Variable para saber si estamos dentro de un frame
+
+    // Abre el archivo en modo lectura
+    if (state == "CONSOLE_WELCOME"){
+        file = fopen("welcome.txt", "r");
+    } else if (state == "CONSOLE_EXIT"){
+        file = fopen("exit.txt", "r");
+    }
+    if (file == NULL) {
+        printf("No se pudo abrir el archivo.\n");
+        exit(_STATUS_ERR);
+    }
+    else{
+        printMessage(file);
+    }
+    return "_STATUS_OK";
+}
+/**
+ * @brief Prints the .txt file
+ * 
+ * @param file 
+ */
+void printFile(FILE *file){
+// Lee y muestra los frames
+    char line[MAX_LINE_LENGTH];
+    bool in_frame = false;
+    while (fgets(line, MAX_LINE_LENGTH, file) != NULL) {
+        if (strcmp(line, "START\n") == 0) {
+            in_frame = true; // Comenzamos un nuevo frame
+            system("clear"); // Limpiar pantalla
+        } else if (strcmp(line, "END\n") == 0) {
+            in_frame = false; // Terminamos el frame actual
+            usleep(FRAME_DELAY); // Esperamos entre frames
+        } else if (in_frame) {
+            // Si estamos dentro de un frame, imprimimos las líneas
+            printf("%s", line);
+        }
+    }
+    // Cierra el archivo
+    fclose(file);
 }
 
 //--------------------------------------------------------------------------------
