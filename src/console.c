@@ -43,6 +43,8 @@ int consoleIO(console_t(*callback)()) {
   console->default_header = CONSOLE_HEADER_MESSAGE;
   console->default_footer = CONSOLE_FOOTER_MESSAGE;
   console_t new_console = callback();
+  console->state_with_animation = new_console.state_with_animation;
+  console->animation_function = new_console.animation_function;
   console->input_data_function = new_console.input_data_function;
   console->state_with_input_data = new_console.state_with_input_data;
   console->state = new_console.state;
@@ -57,8 +59,7 @@ int consoleIO(console_t(*callback)()) {
 
   //Prints the animation before printing any headers or footers
   if (console->state_with_animation) {
-    console->animation_function = new_console.animation_function;
-    console->animation_function();
+    console->animation_function(console->state);
   }
   
   printf("%s\n", console->default_header);
@@ -140,7 +141,7 @@ console_t consoleWelcome() {
   console_welcome.state_with_PETC = false;
   console_welcome.state_with_animation = true;
   console_welcome.state = CONSOLE_WELCOME;
-  console_welcome.animation_function = readFile(console_welcome.state); // IMPORTANT: Check the warning (assignment to ‘char * (*)()’ from incompatible pointer type ‘char *’)
+  console_welcome.animation_function = readFile; // IMPORTANT: Check the warning (assignment to ‘char * (*)()’ from incompatible pointer type ‘char *’)
   console_welcome.console_status = _STATUS_OK;
   console_welcome.console_message = CONSOLE_WELCOME_MESSAGE; //Giuli you implement this
   console_welcome.state_with_input_data = false;
@@ -153,7 +154,7 @@ console_t consoleExit() {
   console_exit.state_with_PETC = false;
   console_exit.state_with_animation = true;
   console_exit.state = CONSOLE_EXIT;
-  console_exit.animation_function = readFile(console_exit.state); // IMPORTANT: Check the warning (assignment to ‘char * (*)()’ from incompatible pointer type ‘char *’)
+  console_exit.animation_function = readFile; // IMPORTANT: Check the warning (assignment to ‘char * (*)()’ from incompatible pointer type ‘char *’)
   console_exit.console_status = _STATUS_OK;
   console_exit.console_message = CONSOLE_EXIT_MESSAGE;      //And this
   return console_exit;
@@ -227,7 +228,7 @@ char* consoleMainMenuInput() {
  * @return char*
  */
 // NOTE: The current .txt files are placeholders, they will be replaced with the actual ASCII art.
-char* readFile(console_state_t state){
+char *readFile(console_state_t state){
   FILE *file;
   if (state == CONSOLE_WELCOME){
       file = fopen("../txt/welcome.txt", "r");
@@ -265,7 +266,7 @@ void printFile(FILE *file){
     }
   }
   fclose(file);
-  delay(3);
+  delay(1);
   system("clear");
 }
 
