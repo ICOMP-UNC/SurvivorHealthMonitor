@@ -7,6 +7,7 @@
     "errormessage.h": "c",
     "send.h": "c",
     "console.h": "c",
-    "stdlib.h": "c"
+    "stdlib.h": "c",
+    "consolescreen.h": "c"
   }
 }

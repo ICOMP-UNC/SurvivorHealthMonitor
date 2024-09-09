@@ -16,7 +16,7 @@
  * @author Emiliano Castro.
  */
 
-//#pragma once
+#pragma once
 #include "../include/console.h"
 #include "../include/consoleScreen.h"
 #include "../include/consoleAnimation.h"
@@ -226,6 +226,7 @@ char* consoleMainMenuInput() {
  * 
  * @return char*
  */
+// NOTE: The current .txt files are placeholders, they will be replaced with the actual ASCII art.
 char* readFile(console_state_t state){
   FILE *file;
   if (state == CONSOLE_WELCOME){
