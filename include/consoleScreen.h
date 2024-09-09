@@ -8,7 +8,7 @@ char* CONSOLE_MAIN_MENU_MESSAGE = "                           MENU PRINCIPAL"
                           "\n 1. Data"
                           "\n 2. Reset App"
                           "\n 3. Exit";
-char *CONSOLE_WELCOME_MESSAGE = "Welcome";
-char *CONSOLE_EXIT_MESSAGE = "Goodbye";
+char *CONSOLE_WELCOME_MESSAGE = "";
+char *CONSOLE_EXIT_MESSAGE = "";
 char *CONSOLE_ERROR_MESSAGE = "Error";
 char *CONSOLE_PRINT_DATA_MESSAGE; 

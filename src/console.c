@@ -16,7 +16,7 @@
  * @author Emiliano Castro.
  */
 
-#pragma once
+//#pragma once
 #include "../include/console.h"
 #include "../include/consoleScreen.h"
 #include "../include/consoleAnimation.h"
@@ -50,22 +50,23 @@ int consoleIO(console_t(*callback)()) {
   console->console_status = new_console.console_status;
   console->console_message = new_console.console_message;
     
-    if(console->console_status != _STATUS_OK){            //Error handling. Need more implementation.
-    printf("%s\n", "Error: ");
-    exit(_STATUS_ERR);
-    }
-  
-if (console->state_with_animation) {
+  if(console->console_status != _STATUS_OK){            //Error handling. Need more implementation.
+  printf("%s\n", "Error: ");
+  exit(_STATUS_ERR);
+  }
+
+  //Prints the animation before printing any headers or footers
+  if (console->state_with_animation) {
     console->animation_function = new_console.animation_function;
     console->animation_function();
   }
-
+  
   printf("%s\n", console->default_header);
   printf("%s\n", console->console_message);
 
-    if(console->state_with_PETC) {
-      printf("%s\n", CONSOLE_PETC);
-    }
+  if(console->state_with_PETC) {
+    printf("%s\n", CONSOLE_PETC);
+  }
 
   printf("%s\n", console->default_footer);
 
@@ -98,8 +99,7 @@ if (console->state_with_animation) {
 void consoleStatesHandler(console_t* console) {
   
   switch(console->state){
-    case CONSOLE_WELCOME:
-      delay(2);
+    case CONSOLE_WELCOME: // Deleted the delay call, the start of the app looks better this way. The delay now happens after the animation is printed.
       system("clear");
       consoleIO(consoleMainMenu);
       break;
@@ -140,7 +140,7 @@ console_t consoleWelcome() {
   console_welcome.state_with_PETC = false;
   console_welcome.state_with_animation = true;
   console_welcome.state = CONSOLE_WELCOME;
-  console_welcome.animation_function = readFile(console_welcome.state);
+  console_welcome.animation_function = readFile(console_welcome.state); // IMPORTANT: Check the warning (assignment to ‘char * (*)()’ from incompatible pointer type ‘char *’)
   console_welcome.console_status = _STATUS_OK;
   console_welcome.console_message = CONSOLE_WELCOME_MESSAGE; //Giuli you implement this
   console_welcome.state_with_input_data = false;
@@ -153,7 +153,7 @@ console_t consoleExit() {
   console_exit.state_with_PETC = false;
   console_exit.state_with_animation = true;
   console_exit.state = CONSOLE_EXIT;
-  console_exit.animation_function = readFile(console_exit.state);
+  console_exit.animation_function = readFile(console_exit.state); // IMPORTANT: Check the warning (assignment to ‘char * (*)()’ from incompatible pointer type ‘char *’)
   console_exit.console_status = _STATUS_OK;
   console_exit.console_message = CONSOLE_EXIT_MESSAGE;      //And this
   return console_exit;
@@ -220,54 +220,52 @@ char* consoleMainMenuInput() {
 
 //-----------------------------Animation functions-------------------------------------
 /**
- * @brief Reads the .txt file based on the state of the console
+ * @brief Reads the .txt file based on the state of the console (Welcome or Exit)
  * 
  * @param state
  * 
  * @return char*
  */
 char* readFile(console_state_t state){
-    FILE *file;
-    int in_frame = 0; // Variable para saber si estamos dentro de un frame
-
-    // Abre el archivo en modo lectura
-    if (state == "CONSOLE_WELCOME"){
-        file = fopen("welcome.txt", "r");
-    } else if (state == "CONSOLE_EXIT"){
-        file = fopen("exit.txt", "r");
-    }
-    if (file == NULL) {
-        printf("No se pudo abrir el archivo.\n");
-        exit(_STATUS_ERR);
-    }
-    else{
-        printMessage(file);
-    }
-    return "_STATUS_OK";
+  FILE *file;
+  if (state == CONSOLE_WELCOME){
+      file = fopen("../txt/welcome.txt", "r");
+  } else if (state == CONSOLE_EXIT){
+      file = fopen("../txt/exit.txt", "r");
+  }
+  if (file == NULL) {
+      printf("No se pudo abrir el archivo.\n");
+      exit(_STATUS_ERR);
+  }
+  else{
+      printFile(file);
+  }
+  return _STATUS_OK;
 }
+
 /**
  * @brief Prints the .txt file
  * 
  * @param file 
  */
+// Could be improved
 void printFile(FILE *file){
-// Lee y muestra los frames
-    char line[MAX_LINE_LENGTH];
-    bool in_frame = false;
-    while (fgets(line, MAX_LINE_LENGTH, file) != NULL) {
-        if (strcmp(line, "START\n") == 0) {
-            in_frame = true; // Comenzamos un nuevo frame
-            system("clear"); // Limpiar pantalla
-        } else if (strcmp(line, "END\n") == 0) {
-            in_frame = false; // Terminamos el frame actual
-            usleep(FRAME_DELAY); // Esperamos entre frames
-        } else if (in_frame) {
-            // Si estamos dentro de un frame, imprimimos las líneas
-            printf("%s", line);
-        }
+  char line[MAX_LINE_LENGTH];
+  bool in_frame = false;
+  while (fgets(line,MAX_LINE_LENGTH, file) != NULL) {
+    if (strcmp(line, "START\n") == 0) {
+        in_frame = true;                    // Starts a new frame when reading "START"
+        system("clear");
+    } else if (strcmp(line, "END\n") == 0) {
+        in_frame = false;                   // Ends the frame when reading "END"
+        usleep(FRAME_DELAY);                // Delay between frames in microseconds
+    } else if (in_frame) {  
+        printf("%s", line);                 // Prints the frame
     }
-    // Cierra el archivo
-    fclose(file);
+  }
+  fclose(file);
+  delay(3);
+  system("clear");
 }
 
 //--------------------------------------------------------------------------------

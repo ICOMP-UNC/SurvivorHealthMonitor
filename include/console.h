@@ -81,6 +81,11 @@ console_t consolePrintData();
 console_t consoleWelcome();
 console_t consoleMainMenu();
 
+/**
+ * @brief Delay function for the console.
+ * 
+ */
+void delay(double);
 
 /**
  * @brief Get the Console location on memory

@@ -1,0 +1,84 @@
+START
+WELCOME
+END
+START
+ WELCOME
+END
+START
+  WELCOME
+END
+START
+   WELCOME
+END
+START
+    WELCOME
+END
+START
+     WELCOME
+END
+START
+      WELCOME
+END
+START
+       WELCOME
+END
+START
+        WELCOME
+END
+START
+         WELCOME
+END
+START
+          WELCOME
+END
+START
+           WELCOME
+END
+START
+            WELCOME
+END
+START
+             WELCOME
+END
+START
+              WELCOME
+END
+START
+               WELCOME
+END
+START
+                WELCOME
+END
+START
+                 WELCOME
+END
+START
+                  WELCOME
+END
+START
+                   WELCOME
+END
+START
+                    WELCOME
+END
+START
+                     WELCOME
+END
+START
+                     -WELCOME-
+END
+START
+                     --WELCOME--
+END
+START
+                     ---WELCOME---
+END
+START
+                     ----WELCOME----
+END
+START
+                     -----WELCOME-----
+END
+START
+                     ------WELCOME------
+END
